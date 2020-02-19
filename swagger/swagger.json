@@ -1,0 +1,323 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Todos API",
+    "version": "1.0.0",
+    "title": "Todos API Test",
+    "termsOfService": "",
+    "contact": { "email": "mo.mustafa3@gmail.com" },
+    "license": {
+      "name": "",
+      "url": ""
+    }
+  },
+  "host": "",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Todos",
+      "description": "Todos Management API",
+      "externalDocs": {
+        "description": "",
+        "schema": {
+        }
+      }
+    }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/todos/create": {
+      "post": {
+        "tags": ["Todos"],
+        "summary": "What needs to be done?",
+        "description": "",
+        "operationId": "createTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Create a Todo task",
+            "required": true,
+            "schema": { "$ref": "#/definitions/create" }
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { "$ref": "#/definitions/successfulResponse" }
+          },
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/todos/list": {
+      "get": {
+        "tags": ["Todos"],
+        "summary": "List of Todo task",
+        "description": "",
+        "operationId": "listTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { 
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/todo" 
+              }
+            }
+          }, 
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          }, 
+          "404": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          }, 
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/todos/list/{id}": {
+      "get": {
+        "tags": ["Todos"],
+        "summary": "ID for the Todo task",
+        "description": "",
+        "operationId": "listIdTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "ID for the Todo task",
+            "format": "string",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { 
+              "$ref": "#/definitions/todo" 
+            }
+          }, 
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          }, 
+          "404": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/todos/update": {
+      "put": {
+        "tags": ["Todos"],
+        "summary": "Completed a Todo task",
+        "description": "",
+        "operationId": "updateCompletedTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update a Todo task",
+            "required": true,
+            "schema": { "$ref": "#/definitions/completed" }
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { "$ref": "#/definitions/successfulResponse" }
+          }, 
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          }, 
+          "404": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          }, 
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/todos/delete": {
+      "delete": {
+        "tags": ["Todos"],
+        "summary": "Delete all Todo task",
+        "description": "",
+        "operationId": "deleteTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { 
+              "$ref": "#/definitions/successfulResponse" 
+            }
+          },
+          "404": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/todos/delete/{id}": {
+      "delete": {
+        "tags": ["Todos"],
+        "summary": "Delete ID for the Todo task",
+        "description": "",
+        "operationId": "deleteIdTodoTask",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "ID for the Todo task",
+            "format": "string",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { 
+              "$ref": "#/definitions/successfulResponse" 
+            }
+          },
+          "404": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    }
+  },
+  "securityDefinitions": {},
+  "definitions": {
+    "create": {
+      "type": "object",
+      "properties": {
+        "subject": { 
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Subject" 
+        }
+      },
+      "required": [
+        "subject"
+      ]
+    },
+    "update": {
+      "type": "object",
+      "properties": {
+        "id": { 
+          "type": "string",          
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "ID for the Todo task" 
+        },
+        "subject": { 
+          "type": "string",          
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Subject"
+        }
+      },
+      "required": [
+        "id",
+        "subject"
+      ]
+    },
+    "completed": {
+      "type": "object",
+      "properties": {
+        "id": { 
+          "type": "string",          
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "ID for the Todo task" 
+        },
+        "completed": { 
+          "type": "boolean",          
+          "description": "Completed"
+        }
+      },
+      "required": [
+        "id",
+        "completed"
+      ]
+    },
+    "todo": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "ID for the Todo task" 
+        },
+        "subject": { 
+          "type": "string",
+          "description": "Subject" 
+        },
+        "completed": { 
+          "type": "boolean",
+          "description": "Completed"   
+        },
+        "created": { 
+          "type": "string",
+          "description": "Date Created"   
+        }
+      }
+    },
+    "successfulResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Successfully Inserted"
+        }
+      }
+    },
+    "errorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Technical Error"
+        },
+        "statusCode": {
+          "type": "integer",
+          "format": "int32",
+          "example": 500
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Github Repository",
+    "url": "https://github.com/webmanic/todos"
+  }
+}
