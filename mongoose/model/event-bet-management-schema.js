@@ -15,7 +15,7 @@ export const EventBetManagementSchema = new Schema({
     required: true
   },
   ticketNo: {
-    type: Number,
+    type: [Number],
     required: true
   },
   date: {

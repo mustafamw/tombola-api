@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Todos API",
+    "description": "Tombola API",
     "version": "1.0.0",
-    "title": "Todos API Test",
+    "title": "Tombola API Test",
     "termsOfService": "",
     "contact": { "email": "mo.mustafa3@gmail.com" },
     "license": {
@@ -15,8 +15,8 @@
   "basePath": "/api/v1",
   "tags": [
     {
-      "name": "Todos",
-      "description": "Todos Management API",
+      "name": "Tombola",
+      "description": "Tombola Management API",
       "externalDocs": {
         "description": "",
         "schema": {
@@ -26,21 +26,21 @@
   ],
   "schemes": ["http"],
   "paths": {
-    "/todos/create": {
+    "/user/signup": {
       "post": {
-        "tags": ["Todos"],
-        "summary": "What needs to be done?",
+        "tags": ["Tombola"],
+        "summary": "Signup",
         "description": "",
-        "operationId": "createTodoTask",
+        "operationId": "userSignup",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "Create a Todo task",
+            "description": "Tombola Signup Account",
             "required": true,
-            "schema": { "$ref": "#/definitions/create" }
+            "schema": { "$ref": "#/definitions/userCredential" }
           }
         ],
         "responses": { 
@@ -56,12 +56,72 @@
         }
       }
     },
-    "/todos/list": {
-      "get": {
-        "tags": ["Todos"],
-        "summary": "List of Todo task",
+    "/user/login": {
+      "post": {
+        "tags": ["Tombola"],
+        "summary": "Login",
         "description": "",
-        "operationId": "listTodoTask",
+        "operationId": "userLogin",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Tombola Login Account",
+            "required": true,
+            "schema": { "$ref": "#/definitions/userCredential" }
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { "$ref": "#/definitions/successfulResponse" }
+          },
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/event/create": {
+      "post": {
+        "tags": ["Tombola"],
+        "summary": "Create Event",
+        "description": "",
+        "operationId": "createEvent",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Tombola Create Event",
+            "required": true,
+            "schema": { "$ref": "#/definitions/createEvent" }
+          }
+        ],
+        "responses": { 
+          "200": { 
+            "schema": { "$ref": "#/definitions/successfulResponse" }
+          },
+          "400": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          },
+          "500": { 
+            "schema": { "$ref": "#/definitions/errorResponse" }
+          } 
+        }
+      }
+    },
+    "/event/list": {
+      "get": {
+        "tags": ["Tombola"],
+        "summary": "List of Events",
+        "description": "",
+        "operationId": "listOfEvents",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -71,7 +131,7 @@
             "schema": { 
               "type": "array",
               "items": {
-                "$ref": "#/definitions/todo" 
+                "$ref": "#/definitions/eventList" 
               }
             }
           }, 
@@ -87,17 +147,17 @@
         }
       }
     },
-    "/todos/list/{id}": {
+    "/event/list/{id}": {
       "get": {
-        "tags": ["Todos"],
-        "summary": "ID for the Todo task",
+        "tags": ["Tombola"],
+        "summary": "ID for the List of Event",
         "description": "",
-        "operationId": "listIdTodoTask",
+        "operationId": "idListOfEvents",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "ID for the Todo task",
+            "description": "ID for the List of Event",
             "format": "string",
             "in": "path",
             "name": "id",
@@ -108,7 +168,7 @@
         "responses": { 
           "200": { 
             "schema": { 
-              "$ref": "#/definitions/todo" 
+              "$ref": "#/definitions/eventListId" 
             }
           }, 
           "400": { 
@@ -123,57 +183,29 @@
         }
       }
     },
-    "/todos/update": {
-      "put": {
-        "tags": ["Todos"],
-        "summary": "Completed a Todo task",
+    "/event/bet": {
+      "post": {
+        "tags": ["Tombola"],
+        "summary": "Event Bet",
         "description": "",
-        "operationId": "updateCompletedTodoTask",
+        "operationId": "eventBet",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "Update a Todo task",
+            "description": "Tombola Event Ticket Bet",
             "required": true,
-            "schema": { "$ref": "#/definitions/completed" }
+            "schema": { "$ref": "#/definitions/eventBet" }
           }
         ],
         "responses": { 
           "200": { 
             "schema": { "$ref": "#/definitions/successfulResponse" }
-          }, 
+          },
           "400": { 
             "schema": { "$ref": "#/definitions/errorResponse" }
-          }, 
-          "404": { 
-            "schema": { "$ref": "#/definitions/errorResponse" }
-          }, 
-          "500": { 
-            "schema": { "$ref": "#/definitions/errorResponse" }
-          } 
-        }
-      }
-    },
-    "/todos/delete": {
-      "delete": {
-        "tags": ["Todos"],
-        "summary": "Delete all Todo task",
-        "description": "",
-        "operationId": "deleteTodoTask",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-        ],
-        "responses": { 
-          "200": { 
-            "schema": { 
-              "$ref": "#/definitions/successfulResponse" 
-            }
-          },
-          "404": { 
-            "schema": { "$ref": "#/definitions/errorResponse" }
           },
           "500": { 
             "schema": { "$ref": "#/definitions/errorResponse" }
@@ -181,17 +213,17 @@
         }
       }
     },
-    "/todos/delete/{id}": {
-      "delete": {
-        "tags": ["Todos"],
-        "summary": "Delete ID for the Todo task",
+    "/event/valid/{id}": {
+      "post": {
+        "tags": ["Tombola"],
+        "summary": "Event Bet",
         "description": "",
-        "operationId": "deleteIdTodoTask",
+        "operationId": "eventBet",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "ID for the Todo task",
+            "description": "ID for the List of Event",
             "format": "string",
             "in": "path",
             "name": "id",
@@ -201,11 +233,9 @@
         ],
         "responses": { 
           "200": { 
-            "schema": { 
-              "$ref": "#/definitions/successfulResponse" 
-            }
+            "schema": { "$ref": "#/definitions/successfulResponse" }
           },
-          "404": { 
+          "400": { 
             "schema": { "$ref": "#/definitions/errorResponse" }
           },
           "500": { 
@@ -217,80 +247,221 @@
   },
   "securityDefinitions": {},
   "definitions": {
-    "create": {
+    "userCredential": {
       "type": "object",
       "properties": {
-        "subject": { 
+        "username": { 
           "type": "string",
           "minLength": 1,
           "maxLength": 50,
-          "description": "Subject" 
+          "description": "Username" 
+        },
+        "password": { 
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Password" 
         }
       },
       "required": [
-        "subject"
+        "username",
+        "password"
       ]
     },
-    "update": {
+    "createEvent": {
       "type": "object",
       "properties": {
-        "id": { 
+        "title": { 
           "type": "string",          
           "minLength": 1,
           "maxLength": 50,
-          "description": "ID for the Todo task" 
+          "description": "Title" 
         },
-        "subject": { 
+        "imageUrl": { 
           "type": "string",          
           "minLength": 1,
-          "maxLength": 50,
-          "description": "Subject"
+          "maxLength": 200,
+          "description": "Image"
+        },
+        "minTicketNo": { 
+          "type": "number",          
+          "description": "Minimum Ticket Number",
+          "min": 1,
+          "max": 500
+        },
+        "maxTicketNo": { 
+          "type": "number",          
+          "description": "Maximum Ticket Number",
+          "min": 1,
+          "max": 500
+        },
+        "price": { 
+          "type": "number",          
+          "description": "Ammount in Pennies",
+          "min": 1,
+          "max": 1000000000000
+        },
+        "priceIncrease": { 
+          "type": "number",          
+          "description": "Increase Price on Ticket No Amount Selected",
+          "min": 1,
+          "max": 500
+        },
+        "pricePercentage": { 
+          "type": "number",          
+          "description": "",
+          "min": 1,
+          "max": 100
+        },
+        "expires": { 
+          "type": "string",          
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Expiry DateTime"
         }
       },
       "required": [
-        "id",
-        "subject"
+        "title",
+        "imageUrl",
+        "minTicketNo",
+        "maxTicketNo",
+        "price",
+        "priceIncrease",
+        "pricePercentage"
       ]
     },
-    "completed": {
+    "eventList": {
       "type": "object",
       "properties": {
-        "id": { 
+        "_id": { 
           "type": "string",          
-          "minLength": 1,
-          "maxLength": 50,
-          "description": "ID for the Todo task" 
+          "description": "Event Id" 
         },
-        "completed": { 
+        "title": { 
+          "type": "string",          
+          "description": "Title" 
+        },
+        "imageUrl": { 
+          "type": "string",          
+          "description": "Image"
+        },
+        "price": { 
+          "type": "number",          
+          "description": "Ammount in Pennies"
+        },
+        "priceIncrease": { 
+          "type": "number",          
+          "description": "Increase Price on Ticket No Amount Selected"
+        },
+        "pricePercentage": { 
+          "type": "number",          
+          "description": ""
+        },
+        "expires": { 
+          "type": "string",          
+          "description": "Event Expires"
+        },
+        "date": { 
+          "type": "string",          
+          "description": "Event Created"
+        },
+        "minTicketNo": { 
+          "type": "number",          
+          "description": "Minimum Ticket Number"
+        },
+        "maxTicketNo": { 
+          "type": "number",          
+          "description": "Maximum Ticket Number"
+        }
+      },
+      "required": [
+      ]
+    },
+    "eventListId": {
+      "type": "object",
+      "properties": {
+        "_id": { 
+          "type": "string",          
+          "description": "Event Id" 
+        },
+        "title": { 
+          "type": "string", 
+          "description": "Title" 
+        },
+        "imageUrl": { 
+          "type": "string",
+          "description": "Image"
+        },
+        "price": { 
+          "type": "number",          
+          "description": "Ammount in Pennies"
+        },
+        "priceIncrease": { 
+          "type": "number",          
+          "description": "Increase Price on Ticket No Amount Selected"
+        },
+        "pricePercentage": { 
+          "type": "number",          
+          "description": ""
+        },
+        "expires": { 
+          "type": "date",          
+          "description": "Event Expires"
+        },
+        "date": { 
+          "type": "date",          
+          "description": "Event Created"
+        },
+        "tickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tickets" 
+          }
+        }
+      },
+      "required": [
+      ]
+    },
+    "tickets": {
+      "type": "object",
+      "properties": {
+        "disabled": { 
           "type": "boolean",          
-          "description": "Completed"
+          "description": "Ticket Disabled" 
+        },
+        "owner": { 
+          "type": "boolean",          
+          "description": "Ticket Disabled" 
+        },
+        "ticketNo": { 
+          "type": "number",          
+          "description": "Ticket Number" 
         }
       },
       "required": [
-        "id",
-        "completed"
       ]
     },
-    "todo": {
+    "eventBet": {
       "type": "object",
       "properties": {
-        "_id": {
-          "type": "string",
-          "description": "ID for the Todo task" 
+        "userId": { 
+          "type": "string",          
+          "description": "User Id" 
         },
-        "subject": { 
-          "type": "string",
-          "description": "Subject" 
+        "eventId": { 
+          "type": "string",          
+          "description": "Event Id" 
         },
-        "completed": { 
-          "type": "boolean",
-          "description": "Completed"   
-        },
-        "created": { 
-          "type": "string",
-          "description": "Date Created"   
+        "ticketNo": { 
+          "type": "array",          
+          "description": "Ticket Number", 
+          "items": {
+            "type": "number"
+          }
         }
-      }
+      },
+      "required": [
+      ]
     },
     "successfulResponse": {
       "type": "object",
@@ -318,6 +489,6 @@
   },
   "externalDocs": {
     "description": "Github Repository",
-    "url": "https://github.com/webmanic/todos"
+    "url": "https://github.com/webmanic/tombola-api"
   }
 }

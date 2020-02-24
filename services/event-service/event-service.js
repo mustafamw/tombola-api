@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { EventManagementSchema } from '../../mongoose/model/event-management-schema';
 import { EventGeneratorService } from './event-generator';
+import { EventValidationService } from './event-validation';
  
 const HttpStatus = require('http-status-codes');
 
@@ -8,6 +9,7 @@ export class EventManagementService {
 
     constructor() {
         this.EventManagement =  mongoose.model('event', EventManagementSchema);
+        this.EventValidationService = new EventValidationService();
     };
 
     create(data) {
@@ -20,6 +22,7 @@ export class EventManagementService {
         eventManagement.price = data.price;
         eventManagement.priceIncrease = data.priceIncrease;
         eventManagement.pricePercentage = data.pricePercentage;
+        eventManagement.expires = Date.now() + 5 * 60 * 1000; // Default 5min from current time
 
         return new Promise((resolve, reject) => {
             eventManagement.save((err) => {
@@ -62,7 +65,7 @@ export class EventManagementService {
 
         return new Promise((resolve, reject) => {
             this.EventManagement.findById(id, (error, data) => {
-                if(error === null || (data !== undefined && data)){
+                if(data){
                     new EventGeneratorService(data, userId, (mapping) => {
                         return this.resolved(resolve, mapping);
                     });
@@ -72,6 +75,21 @@ export class EventManagementService {
             });
         });
 
+    };
+
+    eventAndTicketNoValid(eventId, ticketNos) {
+        return new Promise((resolve, reject) => {
+            this.EventManagement.findById(eventId, (error, data) => {
+                if(data && this.EventValidationService.isTicketValid(data, ticketNos)){
+                    resolve();
+                } else {
+                    reject({
+                        message: "Event Not Found",
+                        code: HttpStatus.NOT_FOUND
+                    });
+                } 
+            });
+        });
     };
 
     resolved(resolve, message) {

@@ -8,17 +8,23 @@ export class UserManagementService {
         this.UserManagement =  mongoose.model('user', UserManagementSchema);
     };
     
-    emailExists(email) {
+    usernameExists(username) {
 
         return new Promise((resolve, reject) => {
-            this.UserManagement.findOne({email}, (error, data) => {
+            this.UserManagement.findOne({username}, (error, data) => {
                 if(data && data != null){
-                    return this.rejected(reject, "Email already taken", HttpStatus.CONFLICT);
+                    return reject({ 
+                        message: "Username already taken", 
+                        code: HttpStatus.CONFLICT
+                    });
                 }
                 if(error){
-                    return this.rejected(reject, "Technical Error", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return reject({
+                        message: "Technical Error", 
+                        code: HttpStatus.INTERNAL_SERVER_ERROR
+                    });
                 }
-                resolve();
+                return resolve();
             });
         });
 
@@ -30,32 +36,59 @@ export class UserManagementService {
         userManagement.username = data.username;
         userManagement.password = data.password;
 
-        return this.emailExists(userManagement.username).then(() => {
-            return new Promise((resolve, reject) => {
-                userManagement.save((err) => {
-                    if (err) {
-                        return this.rejected(reject, "Techinal Error", HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                    return this.resolved(resolve, { message: "Successfully Inserted" });
+        return new Promise((resolve, reject) => {
+            if(data && (data.username && data.username.length > 0) || (data.password && data.password.length > 0)) {
+                return this.usernameExists(userManagement.username).then(() => {
+                    userManagement.save((err, data) => {
+                        if(data && data != null){
+                            return this.resolved(resolve, { id: data._id });
+                        }
+                        if (err) {
+                            return this.rejected(reject, "Techinal Error", HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                    });
+                }, (error) => {
+                    return this.rejected(reject, error.message, error.code);
                 });
-            });
+            } else {
+                return this.rejected(reject, "Invalid Username/Password Fields...", HttpStatus.UNAUTHORIZED);
+            }
         });
     };
 
     login(data) {
 
         return new Promise((resolve, reject) => {
-            this.UserManagement.findOne(data, (error, data) => {
-                if(data && data != null){
-                    return this.resolved(resolve, { id: data._id });
-                }
-                if (error) {
-                    return this.rejected(reject, "Techinal Error", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+            if(data && (data.username && data.username.length > 0) || (data.password && data.password.length > 0)) {
+                this.UserManagement.findOne(data, (error, data) => {
+                    if(data && data != null){
+                        return this.resolved(resolve, { id: data._id });
+                    }
+                    if (error) {
+                        return this.rejected(reject, "Techinal Error", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                    this.rejected(reject, "Incorrect Login", HttpStatus.UNAUTHORIZED);
+                });
+            } else {
                 this.rejected(reject, "Incorrect Login", HttpStatus.UNAUTHORIZED);
-            });
+            }
         });
 
+    };
+
+    isUserIdValid(id) {
+        return new Promise((resolve, reject) => {
+            this.UserManagement.findById(id, (error, data) => {
+                if(data){
+                    resolve();
+                } else {
+                    reject({
+                        message: "User Id Not Found",
+                        code: HttpStatus.NOT_FOUND
+                    });
+                }
+            });
+        });
     };
 
     resolved(resolve, message) {
