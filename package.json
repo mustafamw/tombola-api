@@ -29,7 +29,7 @@
     "cross-env": "^5.2.1",
     "express": "^4.17.1",
     "http-status-codes": "^1.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.9.1",
     "opn": "^6.0.0",
     "swagger-express-middleware": "^2.0.5",
